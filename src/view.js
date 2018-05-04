@@ -3,30 +3,36 @@ import logo from './logo.svg';
 import './App.css';
 
 const List = (props) => {
-  const { items, onDelete } = props;
-  console.log(items);
-  
+  const { items, onDelete, onChange } = props;
+  console.log(props);
+
   return (<ul>
-    { items.map((item, index) => <li key={index}>{ item }<button data-index={index} onClick={onDelete} >delete</button><button data-index={index}>edit</button></li>) }
+    { items.map((item, index) =>
+      <li key={index}>
+      <input
+        type="checkbox"
+        data-index={index}
+        checked={item.complete}
+        onChange = {onChange}/>
+      { item.value }
+      <button data-index={index} onClick={onDelete} >delete</button>
+      </li>
+    )}
   </ul>);
 }
 
 class Viewtemp extends Component {
   constructor(props) {
     super(props);
-    // this.state = {
-    //   value: '',
-    //   complete: false,
-    // }
     this.state = {
       term: '',
-      items: ['item1', 'item2','item3']
+      items: [{value: 'item1',complete: false},{value: 'item2',complete: true},{value: 'item3',complete: false},]
     };
-    //this.arr = [{value: 'item1', complete: false},{value: 'item2', complete: false}]
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onDelete = this.onDelete.bind(this);
+    this.onChange = this.onChange.bind(this);
 
   }
   handleChange(event) {
@@ -36,9 +42,9 @@ class Viewtemp extends Component {
     event.preventDefault();
     this.setState({
       term: '',
-      items: [...this.state.items, this.state.term]
+      items: [...this.state.items, {value: this.state.term, complete: false}]
     }, () => {
-      console.log(this.state);
+      console.log( 'add',this.state);
     });
 
   }
@@ -49,7 +55,17 @@ class Viewtemp extends Component {
       term: '',
       items: newList
     }, () => {
-      console.log(this.state);
+      console.log('del',this.state);
+    });
+  }
+  onChange(event) {
+    const indexItem = event.target.dataset.index
+    this.state.items[indexItem].complete = event.target.checked;
+    const newList = this.state.items;
+    this.setState({
+      items:this.state.items
+    }, () => {
+      console.log('change',this.state);
     });
   }
 
@@ -64,9 +80,8 @@ class Viewtemp extends Component {
         <List
           items={ this.state.items }
           onDelete={ this.onDelete }
-          onEdit={ this.onEdit }
+          onChange={ this.onChange }
         />
-        <input type="text" className = "editInput" />
       </div>
     );
   }
