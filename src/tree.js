@@ -16,7 +16,9 @@ class Tree extends Component {
 	}
 	handleClick(event) {
 		const itemIndex = event.target.dataset.index;
-		this.state.data.data[itemIndex].isShow= !this.state.data.data[itemIndex].isShow;
+		if (itemIndex) {
+			this.state.data.data[itemIndex].isShow= !this.state.data.data[itemIndex].isShow;
+		}
     this.setState({
 			data: this.state.data,
 		});
@@ -25,7 +27,6 @@ class Tree extends Component {
 
 
   render() {
-		const style = ( !this.state.isshow ) ? {display: 'none'} : {};
     return (
 			<List
 				item = {this.state.data.data}
