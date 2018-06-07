@@ -16,7 +16,13 @@ class Tree extends Component {
 	}
 	handleClick(event) {
 		const itemIndex = event.target.dataset.index;
-		if (itemIndex) {
+		const trigger = event.target.className;
+		const isShow = (trigger === 'closeTree') ? false: true;
+		if (trigger) { // 點選全開或全關時
+			this.state.data.data.map((item, index) =>
+				item.isShow = isShow
+			)
+		} else if (itemIndex) { // 單個點擊時
 			this.state.data.data[itemIndex].isShow= !this.state.data.data[itemIndex].isShow;
 		}
     this.setState({
@@ -28,11 +34,15 @@ class Tree extends Component {
 
   render() {
     return (
-			<List
-				item = {this.state.data.data}
-				isShow = {this.isshow}
-				onClick = {this.handleClick}
-			/>
+			<div>
+				<List
+					item = {this.state.data.data}
+					isShow = {this.isshow}
+					onClick = {this.handleClick}
+				/>
+				<button className="closeTree" onClick={this.handleClick}>close tree</button>
+				<button className="openTree" onClick={this.handleClick}>open tree</button>
+			</div>
     );
   }
 }
